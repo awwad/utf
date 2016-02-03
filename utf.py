@@ -477,8 +477,8 @@ def testing_monitor(file_path, security_layers):
     for key, value in report.items():
       print 'Standard', key, ':'
       produced_val, expected_val = value
-      print "."*30 + "Produced" + "."*30 + "\n" + str(produced_val)
-      print "."*30 + "Expected" + "."*30 + "\n" + str(expected_val)
+      print "."*30 + "Produced" + "."*30 + "\n" + repr(produced_val)
+      print "."*30 + "Expected" + "."*30 + "\n" + repr(expected_val)
       print_dashes()
     
   else:
@@ -622,12 +622,12 @@ def verify_results(pragma_type, pragma_dictionary, output, report):
     for outline in outlines:
       # Are there any wildcards?
       # We use '' to indicate wildcards.
-      while remaining_out_lines and not remaining_out_lines[0]:
+      while remaining_out_lines and not remaining_out_lines[0]:  # <~> This does not make sense to me. We're not actually spending the wildcards this way....
         remaining_out_lines = remaining_out_lines[1:]
       
       # Are there remaining expected lines?
       if remaining_out_lines and remaining_out_lines[0] in outline:
-        remaining_out_lines = remaining_out_lines[1:]
+        remaining_out_lines = remaining_out_lines[1:] # <~> Why aren't we then marking this outline as OK or something?
 
     # Get rid of any remaining wildcards that may still exist
     while remaining_out_lines and not remaining_out_lines[0]:
@@ -645,7 +645,10 @@ def verify_results(pragma_type, pragma_dictionary, output, report):
       report[pragma_type] = (out, expected_output)
   # If not, make sure the standard out is empty.
   elif out:
-    report[pragma_type] = (out, None)
+    # Specifically disregard '\x1b[?1034h' here. See issue https://github.com/SeattleTestbed/seash/issues/99#issuecomment-179342305
+    # Todo: But we haven't covered the case in which there are pragma directives and this escape character precedes them....
+    if out != '\x1b[?1034h':
+      report[pragma_type] = (out, None)
 
 def parse_pragma(source_text):
   """
