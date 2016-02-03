@@ -477,8 +477,8 @@ def testing_monitor(file_path, security_layers):
     for key, value in report.items():
       print 'Standard', key, ':'
       produced_val, expected_val = value
-      print "."*30 + "Produced" + "."*30 + "\n" + repr(produced_val)
-      print "."*30 + "Expected" + "."*30 + "\n" + repr(expected_val)
+      print "."*30 + "Produced" + "."*30 + "\n" + str(produced_val)
+      print "."*30 + "Expected" + "."*30 + "\n" + str(expected_val)
       print_dashes()
     
   else:
