@@ -768,7 +768,7 @@ def filter_files(file_list, module = None, descriptor = None):
     
     # Skip invalid files
     try:
-      (file_module, file_descrriptor) = parse_file_name(file_name)
+      (file_module, file_descriptor) = parse_file_name(file_name)
     except InvalidTestFileError:
       continue
     
@@ -777,7 +777,7 @@ def filter_files(file_list, module = None, descriptor = None):
       continue
       
     # Filter based on the descriptor.
-    if descriptor and file_descrriptor != descriptor:
+    if descriptor and file_descriptor != descriptor:
       continue
     
     result.append(file_name) 
